@@ -58,7 +58,48 @@ $(document).ready(function() {
         var key = childSnapshot.key;
         var remove = "<button class='glyphicon glyphicon-trash' id=" + key + "></button>"
 
+        //convert first train time back a year to make sure it is set before current time before pushing to firebase.
 
-});
+        var firstTrainConverted = moment(time, "hh:mm").subtract(1, "years");
+        console.log(firstTrainConverted);
+
+        //set a variable equal to the current time from moment.js
+
+        var currentTime = moment();
+        console.log("Current Time: " + moment(currentTime).format("hh:mm"));
+
+        //post current time to jumbotron for reference
+
+        $("#currentTime").html("Current Time: " + moment(currentTime).format("hh:mm"));
+
+        //difference between the first train time and the current time
+
+        var timeDiff = moment().diff(moment(firstTrainConverted), "minutes");
+        console.log("Difference In Time: " + timeDiff);
+
+        //time apart by finding the remainder of the time difference and the frequency
+
+        var timeRemainder = timeDiff % frequency;
+        console.log(timeRemainder);
+
+        //minutes until the next train
+
+        var nextTrainMin = frequency - timeRemainder;
+        console.log("Minutes Till Train: " + nextTrainMin);
+
+        //find the time of the next train arrival
+
+        var nextTrainAdd = moment().add(nextTrainMin, "minutes");
+        var nextTrainArr = moment(nextTrainAdd).format("hh:mm");
+        console.log("Arrival Time: " + nextTrainArr);
+
+        //prepend all information for train data submitted by user
+
+        $("#schedule").prepend("<tr><td>" + name + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + nextTrainArr + "</td><td>" + nextTrainMin + "</td><td>" + remove + "</td></tr>");
+
+
+    }, function(err) {
+        console.log(err);
+    }); 
 
 });
